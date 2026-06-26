@@ -4,6 +4,7 @@ Sistema de gestão de topologia de redes, desenvolvido em C como exercício prá
 
 ## Funcionalidades
 
+- **Autenticação de utilizador** — sistema de login com validação de credenciais através de ficheiro
 - **Gestão de dispositivos** — criar, listar, pesquisar (por nome, ID ou IP), atualizar e remover dispositivos de rede
 - **Gestão de conexões** — criar ligações entre dispositivos e visualizar a topologia da rede
 - **Validação de IP** — validação automática de endereços IPv4 no formato x.x.x.x
@@ -15,11 +16,14 @@ Sistema de gestão de topologia de redes, desenvolvido em C como exercício prá
 ```
 ├── include/
 │   ├── dispositivo.h    # Struct Dispositivo e declarações de funções
-│   └── grafo.h          # Structs Grafo, Vertice, Adj e declarações de funções
+│   ├── grafo.h          # Structs Grafo, Vertice, Adj e declarações de funções
+│   └── login.h          # Struct User e declaração da função de login
 ├── src/
-│   ├── main.c           # Ponto de entrada
+│   ├── main.c           # Ponto de entrada (login + menu principal)
 │   ├── dispositivo.c    # Implementação da gestão de dispositivos
-│   └── grafo.c          # Implementação do grafo (vértices e arestas)
+│   ├── grafo.c          # Implementação do grafo (vértices e arestas)
+│   └── login.c          # Autenticação de utilizador
+├── usuarios.txt         # Ficheiro de credenciais (user senha tipo)
 ├── output/              # Executável gerado
 └── Makefile
 ```
@@ -29,6 +33,17 @@ Sistema de gestão de topologia de redes, desenvolvido em C como exercício prá
 - **Grafo** — array dinâmico de vértices com listas de adjacência
 - **Vertice** — contém um `Dispositivo` e uma lista ligada de adjacências
 - **Adj** — nó da lista de adjacência (aresta não-direcionada)
+- **User** — dados de autenticação: utilizador, senha e tipo de perfil
+
+## Sistema de Login
+
+O utilizador deve autenticar-se antes de aceder ao sistema. As credenciais são armazenadas no ficheiro `usuarios.txt` com o formato:
+
+```
+username senha tipo
+```
+
+Credencial padrão: `admin` / `1234` (tipo 1)
 
 ## Como Compilar e Executar
 
