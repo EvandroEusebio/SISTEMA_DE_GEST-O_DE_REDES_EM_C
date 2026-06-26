@@ -1,10 +1,30 @@
-#include "Dispositivos.h"
-#include "Grafo.h"
+/**
+ * @file dispositivo.c
+ * @brief Implementacao do modulo de Dispositivos de Rede
+ *
+ * Contem todas as funcoes para gestao de dispositivos:
+ * criacao, listagem, pesquisa, atualizacao, remocao e menus.
+ *
+ * Os dados sao armazenados diretamente no grafo (vertices).
+ */
+
+#include "dispositivo.h"
+#include "grafo.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-int validarIP(char ip[])
+/* ======================== Funcoes Auxiliares ======================== */
+
+/**
+ * @brief Valida se uma string esta no formato de IP valido
+ *
+ * Verifica se o IP tem 4 octetos (0-255) separados por pontos.
+ *
+ * @param ip String com o IP a validar
+ * @return 1 se valido, 0 caso contrario
+ */
+static int validarIP(char ip[])
 {
     int a, b, c, d;
     char extra;
@@ -23,6 +43,11 @@ int validarIP(char ip[])
     return 1;
 }
 
+/* ======================== Pesquisa de Dispositivos ======================== */
+
+/**
+ * @brief Procura um dispositivo pelo ID dentro do grafo
+ */
 int procurarDispositivoPorID(struct Grafo *g, int id)
 {
     for (int i = 0; i < g->numVertices; i++)
@@ -35,6 +60,9 @@ int procurarDispositivoPorID(struct Grafo *g, int id)
     return -1;
 }
 
+/**
+ * @brief Procura um dispositivo pelo nome dentro do grafo
+ */
 int procurarDispositivoPorNome(struct Grafo *g, char nome[])
 {
     for (int i = 0; i < g->numVertices; i++)
@@ -47,6 +75,9 @@ int procurarDispositivoPorNome(struct Grafo *g, char nome[])
     return -1;
 }
 
+/**
+ * @brief Procura um dispositivo pelo IP dentro do grafo
+ */
 int procurarDispositivoPorIP(struct Grafo *g, char ip[])
 {
     for (int i = 0; i < g->numVertices; i++)
@@ -59,6 +90,15 @@ int procurarDispositivoPorIP(struct Grafo *g, char ip[])
     return -1;
 }
 
+/* ======================== Criacao de Dispositivo ======================== */
+
+/**
+ * @brief Cria um novo dispositivo a partir da entrada do utilizador
+ *
+ * Pede todos os dados ao utilizador, valida-os e retorna
+ * um ponteiro para o dispositivo criado. O chamador deve
+ * libertar a memoria apos usar.
+ */
 Dispositivo *criarDispositivo()
 {
     Dispositivo *novo = (Dispositivo *)malloc(sizeof(Dispositivo));
@@ -68,12 +108,15 @@ Dispositivo *criarDispositivo()
         return NULL;
     }
 
+    /* Pedir ID */
     printf("\nID: ");
     scanf("%d", &novo->id);
 
+    /* Pedir nome */
     printf("Nome: ");
     scanf(" %[^\n]", novo->nome);
 
+    /* Pedir e validar IP */
     do
     {
         printf("IP no formato (x.x.x.x): ");
@@ -86,6 +129,7 @@ Dispositivo *criarDispositivo()
 
     } while (!validarIP(novo->ip));
 
+    /* Pedir tipo */
     int tipo_escolha;
     do
     {
@@ -103,6 +147,7 @@ Dispositivo *criarDispositivo()
         }
     } while (tipo_escolha < 1 || tipo_escolha > 5);
 
+    /* Pedir estado */
     int estado;
     do
     {
@@ -122,6 +167,11 @@ Dispositivo *criarDispositivo()
     return novo;
 }
 
+/* ======================== Exibicao de Dispositivos ======================== */
+
+/**
+ * @brief Exibe os dados completos de um dispositivo
+ */
 void exibirDispositivo(Dispositivo d)
 {
     printf("\n=== DISPOSITIVO ENCONTRADO ===\n");
@@ -133,6 +183,9 @@ void exibirDispositivo(Dispositivo d)
     printf("==============================\n");
 }
 
+/**
+ * @brief Lista todos os dispositivos registados no grafo
+ */
 void listarDispositivos(struct Grafo *g)
 {
     if (g->numVertices == 0)
@@ -153,6 +206,13 @@ void listarDispositivos(struct Grafo *g)
     }
 }
 
+/* ======================== Pesquisa via Menu ======================== */
+
+/**
+ * @brief Pesquisa e exibe um dispositivo por ID
+ *
+ * Pede o ID ao utilizador, procura no grafo e exibe o resultado.
+ */
 void pesquisarPorID(struct Grafo *g)
 {
     if (g->numVertices == 0)
@@ -164,43 +224,66 @@ void pesquisarPorID(struct Grafo *g)
     int id;
     printf("\nDigite o ID: ");
     scanf("%d", &id);
+
     int pos = procurarDispositivoPorID(g, id);
     if (pos == -1)
     {
         printf("\nDispositivo ainda nao cadastrado.\n");
         return;
     }
+
     exibirDispositivo(g->vertices[pos].dispositivo);
 }
 
+/**
+ * @brief Pesquisa e exibe um dispositivo por IP
+ *
+ * Pede o IP ao utilizador, procura no grafo e exibe o resultado.
+ */
 void pesquisarPorIP(struct Grafo *g)
 {
     char ip[20];
     printf("\nDigite o IP: ");
     scanf("%s", ip);
+
     int pos = procurarDispositivoPorIP(g, ip);
     if (pos == -1)
     {
         printf("\nIP errado ou dispositivo mau configurado.\n");
         return;
     }
+
     exibirDispositivo(g->vertices[pos].dispositivo);
 }
 
+/**
+ * @brief Pesquisa e exibe um dispositivo por nome
+ *
+ * Pede o nome ao utilizador, procura no grafo e exibe o resultado.
+ */
 void pesquisarPorNome(struct Grafo *g)
 {
     char nome[50];
     printf("\nDigite o nome: ");
     scanf(" %[^\n]", nome);
+
     int pos = procurarDispositivoPorNome(g, nome);
     if (pos == -1)
     {
         printf("\nDispositivo ainda nao cadastrado.\n");
         return;
     }
+
     exibirDispositivo(g->vertices[pos].dispositivo);
 }
 
+/* ======================== Atualizacao e Remocao ======================== */
+
+/**
+ * @brief Atualiza os dados de um dispositivo existente
+ *
+ * Permite alterar nome, IP e tipo. O estado nao e alterado.
+ */
 void atualizarDispositivo(struct Grafo *g, int id)
 {
     int pos = procurarDispositivoPorID(g, id);
@@ -211,9 +294,11 @@ void atualizarDispositivo(struct Grafo *g, int id)
         return;
     }
 
+    /* Atualizar nome */
     printf("Novo nome: ");
     scanf(" %[^\n]", g->vertices[pos].dispositivo.nome);
 
+    /* Atualizar e validar IP */
     do
     {
         printf("Novo IP: ");
@@ -226,12 +311,19 @@ void atualizarDispositivo(struct Grafo *g, int id)
 
     } while (!validarIP(g->vertices[pos].dispositivo.ip));
 
+    /* Atualizar tipo */
     printf("Novo tipo: ");
     scanf(" %[^\n]", g->vertices[pos].dispositivo.tipo);
 
     printf("\nDispositivo atualizado com sucesso.\n");
 }
 
+/**
+ * @brief Remove um dispositivo do grafo
+ *
+ * Remove o vertice e desloca os vertices seguintes.
+ * Tambem realoca o array para libertar memoria.
+ */
 void removerDispositivo(struct Grafo *g, int id)
 {
     int pos = procurarDispositivoPorID(g, id);
@@ -242,6 +334,7 @@ void removerDispositivo(struct Grafo *g, int id)
         return;
     }
 
+    /* Deslocar vertices para preencher o espaco */
     for (int i = pos; i < g->numVertices - 1; i++)
     {
         g->vertices[i] = g->vertices[i + 1];
@@ -249,11 +342,27 @@ void removerDispositivo(struct Grafo *g, int id)
 
     g->numVertices--;
 
-    g->vertices = (Vertice *)realloc(g->vertices, g->numVertices * sizeof(Vertice));
+    /* Realocar array para libertar memoria */
+    if (g->numVertices > 0)
+    {
+        g->vertices = (Vertice *)realloc(g->vertices, g->numVertices * sizeof(Vertice));
+    }
+    else
+    {
+        free(g->vertices);
+        g->vertices = NULL;
+    }
 
     printf("\nDispositivo removido com sucesso.\n");
 }
 
+/* ======================== Menus ======================== */
+
+/**
+ * @brief Menu de pesquisa de dispositivos
+ *
+ * Apresenta opcoes: pesquisar por nome, ID ou IP.
+ */
 void menu_pesquisar(struct Grafo *g)
 {
     if (g->numVertices == 0)
@@ -271,6 +380,7 @@ void menu_pesquisar(struct Grafo *g)
         printf("3. Pesquisar por IP\n");
         printf("0. Voltar\n");
         scanf("%d", &opcao);
+
         switch (opcao)
         {
         case 1: pesquisarPorNome(g); break;
@@ -282,6 +392,11 @@ void menu_pesquisar(struct Grafo *g)
     } while (opcao != 0);
 }
 
+/**
+ * @brief Menu principal de gestao de dispositivos
+ *
+ * Apresenta o menu principal com todas as operacoes disponiveis.
+ */
 void menu_dispositivo(struct Grafo *rede)
 {
     int op, id;
