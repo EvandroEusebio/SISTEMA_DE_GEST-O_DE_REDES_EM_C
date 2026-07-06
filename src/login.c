@@ -1,4 +1,5 @@
 #include "login.h"
+#include "persistencia.h"
 
 int login(User *user)
 {
@@ -24,6 +25,7 @@ int login(User *user)
     {
         if (strcmp(user->usuario, nome_usuario) == 0 && strcmp(user->senha, senha) == 0)
         {
+            definirUtilizadorAutenticado(user->usuario);
             printf("Login realizado com sucesso!\n");
             fclose(arquivo);
             return (0);

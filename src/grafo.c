@@ -1,4 +1,5 @@
 #include "grafo.h"
+#include "persistencia.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,6 +47,20 @@ void adicionarDispositivo(Grafo *g)
     if (d == NULL)
         return;
 
+    if (procurarDispositivoPorID(g, d->id) != -1)
+    {
+        printf("\nJa existe um dispositivo com esse ID.\n");
+        free(d);
+        return;
+    }
+
+    if (procurarDispositivoPorIP(g, d->ip) != -1)
+    {
+        printf("\nJa existe um dispositivo com esse IP.\n");
+        free(d);
+        return;
+    }
+
     /* Aumentar o array de vertices */
     g->numVertices++;
     g->vertices = (Vertice *)realloc(g->vertices, g->numVertices * sizeof(Vertice));
@@ -57,6 +72,19 @@ void adicionarDispositivo(Grafo *g)
     }
     g->vertices[g->numVertices - 1].dispositivo = *d;
     g->vertices[g->numVertices - 1].listaAdj = NULL;
+
+        {
+            char detalhe[256];
+            snprintf(detalhe, sizeof(detalhe), "ID=%d | Nome=%s | IP=%s | Tipo=%s | Estado=%s",
+                     d->id,
+                     d->nome,
+                     d->ip,
+                     d->tipo,
+                     d->estado);
+            registarOperacao("INCLUSAO", detalhe);
+        }
+
+        salvarRede(g);
 
     free(d);
     printf("Dispositivo adicionado ao grafo com sucesso!\n");
@@ -78,6 +106,22 @@ int procurarVertice(Grafo *g, int id)
 /* ======================== Arestas (Conexoes) ======================== */
 
 
+static int conexaoExistePorIndice(Grafo *g, int origem, int destino)
+{
+    Adj *aux = g->vertices[origem].listaAdj;
+
+    while (aux != NULL)
+    {
+        if (aux->destino == destino)
+        {
+            return 1;
+        }
+        aux = aux->prox;
+    }
+
+    return 0;
+}
+
 void criarConexao(Grafo *g, int id1, int id2)
 {
     int v1 = procurarVertice(g, id1);
@@ -86,6 +130,18 @@ void criarConexao(Grafo *g, int id1, int id2)
     if (v1 == -1 || v2 == -1)
     {
         printf("\nDispositivo nao encontrado.\n");
+        return;
+    }
+
+    if (v1 == v2)
+    {
+        printf("\nNao e permitido criar uma conexao com o mesmo dispositivo.\n");
+        return;
+    }
+
+    if (conexaoExistePorIndice(g, v1, v2))
+    {
+        printf("\nConexao ja existente.\n");
         return;
     }
 
@@ -101,11 +157,37 @@ void criarConexao(Grafo *g, int id1, int id2)
     novo->prox = g->vertices[v2].listaAdj;
     g->vertices[v2].listaAdj = novo;
 
+    {
+        char detalhe[256];
+        snprintf(detalhe, sizeof(detalhe), "ID1=%d | ID2=%d", id1, id2);
+        registarOperacao("CONEXAO", detalhe);
+    }
+
+    salvarRede(g);
+
     printf("\nConexao criada com sucesso.\n");
 }
 
 void adicionarConexao(Grafo *g, int origem, int destino)
 {
+    if (g == NULL || origem < 0 || destino < 0 || origem >= g->numVertices || destino >= g->numVertices)
+    {
+        printf("\nIndices invalidos.\n");
+        return;
+    }
+
+    if (origem == destino)
+    {
+        printf("\nNao e permitido criar uma conexao com o mesmo dispositivo.\n");
+        return;
+    }
+
+    if (conexaoExistePorIndice(g, origem, destino))
+    {
+        printf("\nConexao ja existente.\n");
+        return;
+    }
+
     /* Aresta de origem para destino */
     Adj *novo = (Adj *)malloc(sizeof(Adj));
     novo->destino = destino;
@@ -117,6 +199,16 @@ void adicionarConexao(Grafo *g, int origem, int destino)
     novo2->destino = origem;
     novo2->prox = g->vertices[destino].listaAdj;
     g->vertices[destino].listaAdj = novo2;
+
+    {
+        char detalhe[256];
+        snprintf(detalhe, sizeof(detalhe), "ORIGEM=%d | DESTINO=%d",
+                 g->vertices[origem].dispositivo.id,
+                 g->vertices[destino].dispositivo.id);
+        registarOperacao("CONEXAO", detalhe);
+    }
+
+    salvarRede(g);
 }
 
 int existeConexao(Grafo *g, int id1, int id2)

@@ -11,7 +11,7 @@ OUT_DIR = output
 TARGET = $(OUT_DIR)/main
 
 # Source files
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/grafo.c $(SRC_DIR)/dispositivo.c $(SRC_DIR)/login.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/grafo.c $(SRC_DIR)/dispositivo.c $(SRC_DIR)/login.c $(SRC_DIR)/persistencia.c
 OBJS = $(SRCS:.c=.o)
 
 # Default rule

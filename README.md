@@ -10,6 +10,9 @@ Sistema de gestão de topologia de redes, desenvolvido em C como exercício prá
 - **Validação de IP** — validação automática de endereços IPv4 no formato x.x.x.x
 - **Tipos de dispositivo** — Computador, Servidor, Router, Switch, Impressora
 - **Estados** — Ativado, Desativado, Manutenção
+- **Persistência automática** — dados da rede carregados no arranque e guardados após alterações
+- **Sistema de logs** — registo de inclusão, atualização, remoção e conexões
+- **Relatórios** — estatísticas da rede e dispositivos por estado
 
 ## Estrutura do Projeto
 
@@ -22,7 +25,10 @@ Sistema de gestão de topologia de redes, desenvolvido em C como exercício prá
 │   ├── main.c           # Ponto de entrada (login + menu principal)
 │   ├── dispositivo.c    # Implementação da gestão de dispositivos
 │   ├── grafo.c          # Implementação do grafo (vértices e arestas)
-│   └── login.c          # Autenticação de utilizador
+│   ├── login.c          # Autenticação de utilizador
+│   └── persistencia.c   # Persistência, logs e relatórios
+├── data/                # Ficheiros gerados em execução
+├── docs/                # Documentação complementar
 ├── usuarios.txt         # Ficheiro de credenciais (user senha tipo)
 ├── output/              # Executável gerado
 └── Makefile
@@ -44,6 +50,19 @@ username senha tipo
 ```
 
 Credencial padrão: `admin` / `1234` (tipo 1)
+
+## Persistência e Relatórios
+
+Ao iniciar, o programa carrega automaticamente os dados de `data/dispositivos.txt` e `data/conexoes.txt`.
+
+Qualquer inclusão, atualização, remoção ou criação de conexão é gravada de forma automática e registada em `data/logs/operacoes.log`.
+
+Os relatórios são gerados pelo menu interno de relatórios e também guardados em `data/relatorios/`:
+
+- `relatorio_estatistico.txt`
+- `relatorio_estados.txt`
+
+Os ficheiros usam formato texto separado por `|`, o que facilita leitura manual e manutenção.
 
 ## Como Compilar e Executar
 

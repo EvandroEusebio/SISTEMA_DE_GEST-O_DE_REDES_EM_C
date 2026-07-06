@@ -34,6 +34,6 @@ void removerDispositivo(struct Grafo *g, int id);
 
 void menu_pesquisar(struct Grafo *g);
 
-void menu_dispositivo(struct Grafo *rede);
+int menu_dispositivo(struct Grafo *rede);
 
 #endif
