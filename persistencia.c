@@ -4,8 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <time.h>
+
+#if defined(_WIN32)
+#include <direct.h>
+#define CRIAR_DIRETORIO(caminho) _mkdir(caminho)
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#define CRIAR_DIRETORIO(caminho) mkdir(caminho, 0777)
+#endif
 
 #define DIRETORIO_DADOS "data"
 #define DIRETORIO_LOGS "data/logs"
@@ -20,7 +28,7 @@ static char utilizador_autenticado[MAX_USERNAME] = "sistema";
 
 static void criarDiretorioSeNecessario(const char *diretorio)
 {
-    if (mkdir(diretorio, 0777) == -1 && errno != EEXIST)
+    if (CRIAR_DIRETORIO(diretorio) == -1 && errno != EEXIST)
     {
         printf("Nao foi possivel criar o diretorio %s\n", diretorio);
     }
@@ -105,7 +113,7 @@ static void adicionarConexaoSilenciosa(Grafo *g, int origem, int destino)
     g->vertices[destino].listaAdj = novo;
 }
 
-static int conexaoExistePorIndice(Grafo *g, int origem, int destino)
+static int verificarConexao(Grafo *g, int origem, int destino)
 {
     Adj *aux = g->vertices[origem].listaAdj;
 
@@ -316,7 +324,7 @@ int carregarRede(Grafo *g)
                 origem = procurarVertice(g, id_origem);
                 destino = procurarVertice(g, id_destino);
 
-                if (origem != -1 && destino != -1 && !conexaoExistePorIndice(g, origem, destino))
+                if (origem != -1 && destino != -1 && !verificarConexao(g, origem, destino))
                 {
                     adicionarConexaoSilenciosa(g, origem, destino);
                 }

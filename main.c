@@ -15,14 +15,14 @@ int main()
             return 1;
         }
 
-        printf("Bem-vindo, %s!\n", user.usuario);
+        printf("Bem-vindo, %s! (Perfil: %s)\n", user.usuario, nomePerfil(user.tipo));
 
         /* Criar e inicializar o grafo da rede */
         Grafo *rede = criarGrafo();
         carregarRede(rede);
 
         /* Apresentar o menu principal */
-        int fazerLogout = menu_dispositivo(rede);
+        int fazerLogout = menu_dispositivo(rede, user.tipo);
 
         salvarRede(rede);
         liberarGrafo(rede);

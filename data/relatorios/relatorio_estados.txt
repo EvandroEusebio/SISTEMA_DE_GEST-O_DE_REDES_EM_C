@@ -1,27 +1,12 @@
 
 ==================================================
-RELATORIO ESTATISTICO DA REDE
-Utilizador: visitante
-Gerado em : 2026-07-07 23:48:48
+RELATORIO DE ESTADOS DOS DISPOSITIVOS
+Utilizador: admin
+Gerado em : 2026-07-07 23:45:17
 ==================================================
 
-Total de dispositivos : 10
-Total de conexoes     : 3
-
-Por estado:
-- Ativados   : 10
-- Desativados: 0
-- Manutencao : 0
-
-Por tipo:
-- Computadores: 3
-- Servidores  : 2
-- Routers     : 2
-- Switches    : 2
-- Impressoras : 1
-
-Dispositivos registados:
-ID: 1 | Nome: Telma | IP: 1.1.1.1 | Tipo: Computador | Estado: Ativado
+ATIVADOS
+ID: 1 | Nome: carlos | IP: 1.1.1.1 | Tipo: Computador | Estado: Ativado
 ID: 2 | Nome: Manuel | IP: 1.1.1.2 | Tipo: Computador | Estado: Ativado
 ID: 3 | Nome: Joao | IP: 1.1.1.3 | Tipo: Computador | Estado: Ativado
 ID: 4 | Nome: Marcos | IP: 1.1.1.4 | Tipo: Servidor | Estado: Ativado
@@ -32,4 +17,8 @@ ID: 8 | Nome: Mila | IP: 1.1.1.9 | Tipo: Router | Estado: Ativado
 ID: 9 | Nome: Ander | IP: 1.1.1.10 | Tipo: Router | Estado: Ativado
 ID: 10 | Nome: Evandro | IP: 1.1.1.11 | Tipo: Impressora | Estado: Ativado
 
-Fim do relatorio estatistico.
+DESATIVADOS
+
+EM MANUTENCAO
+
+Fim do relatorio de estados.

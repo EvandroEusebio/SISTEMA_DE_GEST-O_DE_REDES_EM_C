@@ -36,3 +36,18 @@ int login(User *user)
     fclose(arquivo);
     return (1);
 }
+
+const char *nomePerfil(int tipo)
+{
+    switch (tipo)
+    {
+    case PERFIL_ADMINISTRADOR:
+        return "Administrador";
+    case PERFIL_TECNICO:
+        return "Tecnico";
+    case PERFIL_VISITANTE:
+        return "Visitante";
+    default:
+        return "Desconhecido";
+    }
+}

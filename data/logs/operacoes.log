@@ -1,1 +1,11 @@
-2026-07-06 23:16:52 | admin | LOGOUT | Sessao terminada
+2026-07-07 23:06:12 | tecnico | INCLUSAO | ID=1 | Nome=eee | IP=1.1.1.1 | Tipo=Computador | Estado=Ativado
+2026-07-07 23:08:01 | tecnico | ATUALIZACAO | ID=1 | Nome=carlos | IP=1.1.1.1 | Tipo=Computador | Estado=Ativado
+2026-07-07 23:26:06 | tecnico | INCLUSAO | ID=2 | Nome=Manuel | IP=1.1.1.2 | Tipo=Computador | Estado=Ativado
+2026-07-07 23:26:45 | tecnico | INCLUSAO | ID=3 | Nome=Joao | IP=1.1.1.3 | Tipo=Computador | Estado=Ativado
+2026-07-07 23:33:06 | admin | CONEXAO | ORIGEM=1 | DESTINO=2
+2026-07-07 23:34:04 | admin | CONEXAO | ID1=1 | ID2=5
+2026-07-07 23:42:57 | admin | CONEXAO | ID1=5 | ID2=3
+2026-07-07 23:46:49 | admin | ATUALIZACAO | ID=1 | Nome=Telma | IP=1.1.1.1 | Tipo=Computador | Estado=Ativado
+2026-07-07 23:48:59 | visitante | LOGOUT | Sessao terminada
+2026-07-07 23:49:12 | admin | REMOCAO | ID=10 | Nome=Evandro | IP=1.1.1.11 | Tipo=Impressora | Estado=Ativado
+2026-07-07 23:49:36 | admin | INCLUSAO | ID=10 | Nome=Evandro | IP=1.1.1.11 | Tipo=Impressora | Estado=Ativado

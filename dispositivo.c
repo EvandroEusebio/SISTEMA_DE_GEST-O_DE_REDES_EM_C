@@ -1,6 +1,6 @@
 /**
- * @file dispositivo.c
- * @brief Implementacao do modulo de Dispositivos de Rede
+ * dispositivo.c
+ * Implementacao do modulo de Dispositivos de Rede
  *
  * Contem todas as funcoes para gestao de dispositivos:
  * criacao, listagem, pesquisa, atualizacao, remocao e menus.
@@ -11,6 +11,7 @@
 #include "dispositivo.h"
 #include "grafo.h"
 #include "persistencia.h"
+#include "login.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -450,13 +451,14 @@ void menu_pesquisar(struct Grafo *g)
     } while (opcao != 0);
 }
 
-int menu_dispositivo(struct Grafo *rede)
+int menu_dispositivo(struct Grafo *rede, int tipoUsuario)
 {
     int op, id;
 
     do
     {
         printf("\n==========GESTAO DO DISPOSITIVO==========\n");
+        printf("Perfil atual: %s\n", nomePerfil(tipoUsuario));
         printf("1. Adicionar dispositivo\n");
         printf("2. Listar dispositivos\n");
         printf("3. Pesquisar dispositivo\n");
@@ -472,6 +474,11 @@ int menu_dispositivo(struct Grafo *rede)
         switch (op)
         {
         case 1:
+            if (tipoUsuario == PERFIL_VISITANTE)
+            {
+                printf("\nAcesso negado. O perfil Visitante nao pode adicionar dispositivos.\n");
+                break;
+            }
             adicionarDispositivo(rede);
             break;
         case 2:
@@ -481,6 +488,11 @@ int menu_dispositivo(struct Grafo *rede)
             menu_pesquisar(rede);
             break;
         case 4:
+            if (tipoUsuario == PERFIL_VISITANTE)
+            {
+                printf("\nAcesso negado. O perfil Visitante nao pode atualizar dispositivos.\n");
+                break;
+            }
             if (rede->numVertices == 0)
             {
                 printf("\nNenhum dispositivo cadastrado.\n");
@@ -491,6 +503,11 @@ int menu_dispositivo(struct Grafo *rede)
             atualizarDispositivo(rede, id);
             break;
         case 5:
+            if (tipoUsuario != PERFIL_ADMINISTRADOR)
+            {
+                printf("\nAcesso negado. Apenas o Administrador pode remover dispositivos.\n");
+                break;
+            }
             if (rede->numVertices == 0)
             {
                 printf("\nNenhum dispositivo cadastrado.\n");
@@ -501,7 +518,7 @@ int menu_dispositivo(struct Grafo *rede)
             removerDispositivo(rede, id);
             break;
         case 6:
-            menuConexoes(rede);
+            menuConexoes(rede, tipoUsuario);
             break;
         case 7:
             menu_relatorios(rede);
