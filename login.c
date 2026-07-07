@@ -1,4 +1,5 @@
 #include "login.h"
+#include "persistencia.h"
 
 int login(User *user)
 {
@@ -24,6 +25,7 @@ int login(User *user)
     {
         if (strcmp(user->usuario, nome_usuario) == 0 && strcmp(user->senha, senha) == 0)
         {
+            definirUtilizadorAutenticado(user->usuario);
             printf("Login realizado com sucesso!\n");
             fclose(arquivo);
             return (0);
@@ -33,4 +35,19 @@ int login(User *user)
     printf("Usuário ou senha incorretos!\n");
     fclose(arquivo);
     return (1);
+}
+
+const char *nomePerfil(int tipo)
+{
+    switch (tipo)
+    {
+    case PERFIL_ADMINISTRADOR:
+        return "Administrador";
+    case PERFIL_TECNICO:
+        return "Tecnico";
+    case PERFIL_VISITANTE:
+        return "Visitante";
+    default:
+        return "Desconhecido";
+    }
 }

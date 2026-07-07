@@ -102,6 +102,22 @@ int existeConexao(Grafo *g, int id1, int id2);
  */
 void mostrarRede(Grafo *g);
 
+/* ======================== Caminhos ======================== */
+
+/**
+ * Encontra e apresenta a rota mais curta entre dois dispositivos
+ *
+ * Usa uma busca em largura (BFS) para encontrar o caminho com o
+ * menor numero de saltos entre o dispositivo de origem e o de
+ * destino (o grafo nao tem pesos nas arestas, por isso "mais curta"
+ * significa "com menos conexoes intermedias").
+ *
+ * g Ponteiro para o grafo
+ * idOrigem ID do dispositivo de origem
+ * idDestino ID do dispositivo de destino
+ */
+void caminhoMaisCurto(Grafo *g, int idOrigem, int idDestino);
+
 /* ======================== Menus ======================== */
 
 /**
@@ -110,7 +126,8 @@ void mostrarRede(Grafo *g);
  * Apresenta opcoes para criar conexoes e visualizar a topologia.
  *
  * g Ponteiro para o grafo
+ * tipoUsuario Perfil do utilizador autenticado (ver PERFIL_* em login.h)
  */
-void menuConexoes(Grafo *g);
+void menuConexoes(Grafo *g, int tipoUsuario);
 
 #endif

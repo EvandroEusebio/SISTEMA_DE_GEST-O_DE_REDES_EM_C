@@ -2,38 +2,30 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
-# Directories
-SRC_DIR = src
-INC_DIR = include
-OUT_DIR = output
+# Output (fica na mesma pasta que o codigo, para os caminhos relativos
+# como "usuarios.txt" e "data/..." funcionarem sem problemas)
+TARGET = main
 
-# Output
-TARGET = $(OUT_DIR)/main
-
-# Source files
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/grafo.c $(SRC_DIR)/dispositivo.c $(SRC_DIR)/login.c
+# Ficheiros fonte (tudo na mesma pasta)
+SRCS = main.c grafo.c dispositivo.c login.c persistencia.c
 OBJS = $(SRCS:.c=.o)
 
-# Default rule
+# Regra por omissao
 all: $(TARGET)
 
-# Create output directory if needed
-$(OUT_DIR):
-	mkdir -p $(OUT_DIR)
-
-# Link
-$(TARGET): $(OBJS) | $(OUT_DIR)
+# Ligacao
+$(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Compile .c to .o
-$(SRC_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -I$(INC_DIR) -c -o $@ $<
+# Compilar .c para .o
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-# Clean
+# Limpar
 clean:
-	rm -f $(SRC_DIR)/*.o $(TARGET)
+	rm -f *.o $(TARGET)
 
-# Run
+# Executar
 run: $(TARGET)
 	./$(TARGET)
 
